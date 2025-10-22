@@ -1,0 +1,106 @@
+body {
+  font-family: sans-serif;
+  background-color: #ffffff;
+  /*background-image: linear-gradient(to bottom, #315481, #ffffff 100%);*/
+  background-attachment: fixed;
+
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+
+  padding: 0;
+  margin: 0;
+
+  font-size: 14px;
+}
+.app {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.app-header {
+  flex-grow: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+
+button {
+  font-weight: bold;
+  font-size: 1em;
+  background-color: transparent;
+  color: #555; 
+  border: 2px solid #ddd;
+  border-radius: 4px; 
+  margin-bottom: 1%;
+  margin-left: 1%;
+  box-shadow: 0 3px 3px rgba(34, 25, 25, 0.4);
+  padding: 5px 15px; 
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+  min-width: 110px; 
+  text-align: center;
+}
+
+button:hover { /* Efeito ao passar o mouse */
+  background-color: #f9f9f9; 
+  border-color: #bbb; 
+  color: #000; 
+}
+
+button:active { /* Efeito ao clicar */
+  background-color: #eee;
+  transform: scale(0.98);
+}
+.login-form {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
+  justify-content: center;
+  align-items: center;
+}
+
+.login-form > div {
+  margin: 8px;
+}
+
+.login-form > div > label {
+  font-weight: bold;
+}
+
+.login-form > div > input {
+  flex-grow: 1;
+  box-sizing: border-box;
+  padding: 10px 6px;
+  background: transparent;
+  border: 1px solid #aaa;
+  width: 100%;
+  font-size: 1em;
+  margin-right: 16px;
+  margin-top: 4px;
+}
+
+.login-form > div > input:focus {
+  outline: 0;
+}
+
+.login-form > div > button {
+  background-color: #62807e;
+}
+
+.user {
+  display: flex;
+
+  align-self: flex-end;
+
+  margin: 8px 16px 0;
+  font-weight: bold;
+  cursor: pointer;
+}
+
