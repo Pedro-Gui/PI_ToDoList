@@ -1,43 +1,55 @@
-import React, { useState, Fragment } from 'react';
-import { Hello } from './Hello.jsx';
-import { Info } from './Info.jsx';
+import React, { Fragment, useEffect } from 'react';
 //login and password imports
 import { useTracker, useSubscribe } from 'meteor/react-meteor-data';
-import { LoginForm } from './LoginForm';
+import { useNavigate } from 'react-router-dom';
 
+export default function App() {
+  const user = useTracker(() => Meteor.user()); // carrega o usuario
+  const navigate = useNavigate(); // cria o objeto de navegação
+  useEffect(() => {
+    if (!user) { //volta para a pagina de login se o usuario não estiver logado
+      navigate('/');
+    }
+  }, [user, navigate]);
 
+  const logout = () => {  // função para dar logout e voltar par a tela de login
+    Meteor.logout();
+    navigate('/'); 
+  } 
 
-export const App = () => {
-  const user = useTracker(() => Meteor.user());
-  
+  const goTasks = () => { // função para ir para a pagina funções ao apertar o botao
+    navigate('/tasks');
+  }
 
-  const logout = () => Meteor.logout();
+  if (!user) {
+    return <div>Carregando...</div>;
+  }
+
   return (
     <div className="app">
       <header>
-        <div className="app-bar">
-          <div className="app-header">
-            <h1>PI Synergia Pedro Guilherme
-            </h1>
+                <div className="app-bar">
+                    <div className="app-header">
+                        <h1>PI Synergia Pedro Guilherme
+                        </h1>
 
-          </div>
-        </div>
-      </header>
+                    </div>
+                    <div className="header-info"> 
+                    <h4>Usuário: {user.username} </h4>
+                    
+                    <button onClick={logout}>Logout 🚪</button>
+                    </div>
+                </div>
+            </header>
       <div className="main">
-        {user ? (
-          <Fragment>
-            <h4>Usuário: {user.username} </h4>
-            <button  onClick={logout}>Logout 🚪</button>          
-            
-            <div>
-              <Hello />
-              <Info />
-            </div>
-          </Fragment>
-        ) : (
-          <LoginForm />
-        )}
+
+        <Fragment>
+          
+          <button onClick={goTasks}>Ver Tarefas</button>
+          
+        </Fragment>
+
       </div>
     </div>
   );
-}
+};
