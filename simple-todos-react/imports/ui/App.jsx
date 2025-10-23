@@ -37,7 +37,7 @@ export default function App() {
                     <div className="header-info"> 
                     <h4>Usuário: {user.username} </h4>
                     
-                    <button onClick={logout}>Logout 🚪</button>
+                    <button className="Meubutton" onClick={logout}>Logout 🚪</button>
                     </div>
                 </div>
             </header>
@@ -45,7 +45,7 @@ export default function App() {
 
         <Fragment>
           
-          <button onClick={goTasks}>Ver Tarefas</button>
+          <button className="Meubutton" onClick={goTasks}>Ver Tarefas</button>
           
         </Fragment>
 

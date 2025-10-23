@@ -25,7 +25,7 @@ export default function LoginPage() {
                     </div>
                 </div>
             </header>
-            <div className="main"></div>
+            
             <div className="main">
                 <LoginForm />
             </div>

@@ -3,7 +3,6 @@ body {
   background-color: #ffffff;
   /*background-image: linear-gradient(to bottom, #315481, #ffffff 100%);*/
   background-attachment: fixed;
-
   position: absolute;
   top: 0;
   bottom: 0;
@@ -43,10 +42,10 @@ header {
   gap: 16px; 
 }
 
-button {
+.Meubutton {
   font-weight: bold;
   font-size: 1em;
-  background-color: transparent;
+  background-color: #ffffff;
   color: #555; 
   border: 2px solid #ddd;
   border-radius: 4px;
@@ -61,13 +60,13 @@ button {
   text-align: center;
 }
 
-button:hover { /* Efeito ao passar o mouse */
+.Meubutton:hover { /* Efeito ao passar o mouse */
   background-color: #f9f9f9; 
   border-color: #bbb; 
   color: #000; 
 }
 
-button:active { /* Efeito ao clicar */
+.Meubutton:active { /* Efeito ao clicar */
   background-color: #eee;
   transform: scale(0.98);
 }
