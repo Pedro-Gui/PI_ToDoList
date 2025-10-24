@@ -4,7 +4,7 @@ import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 
-export const TasksForm = ({HandleAdd}) => {
+export const TasksForm = ({HandleAdd, ButtonTxt}) => {
   const [task, setTask] = useState("");
 
   const handleSubmit = (e) => {
@@ -27,7 +27,7 @@ export const TasksForm = ({HandleAdd}) => {
         />
 
         <Button type="submit" variant="contained">
-          Adicionar tarefa
+          {ButtonTxt}
         </Button>
       </Stack>
     </form>

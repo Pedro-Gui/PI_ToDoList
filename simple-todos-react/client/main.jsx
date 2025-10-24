@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import App from '../imports/ui/App.jsx';
 import LoginPage from '../imports/ui/LoginPage.jsx';
 import TasksPage from '../imports/ui/TasksPage.jsx';
+import TaskEditPage from '../imports/ui/TaskEditPage.jsx';
 import NotFoundPage from '../imports/ui/NotFoundPage.jsx';
 
 Meteor.startup(() => {
@@ -18,6 +19,7 @@ Meteor.startup(() => {
         <Route path="/" element={<LoginPage />} />
         <Route path="/homepage" element={<App />} />
         <Route path="/tasks" element={<TasksPage />} />
+        <Route path="/tasks/edit/:taskId" element={<TaskEditPage />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </BrowserRouter>

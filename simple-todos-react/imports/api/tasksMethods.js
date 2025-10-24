@@ -6,7 +6,7 @@ Meteor.methods({
     if (!this.userId) {
       throw new Meteor.Error("Not-authorized.");
     }
-    
+
     return TasksCollection.insertAsync({
       ...doc,
       userId: this.userId,
@@ -19,5 +19,19 @@ Meteor.methods({
   },
   "tasks.delete"({ _id }) {
     return TasksCollection.removeAsync(_id);
+  },
+  "tasks.edit"({ _id, doc }) {
+    if (!this.userId) {
+      throw new Meteor.Error("Not-authorized.");
+    }
+
+    return TasksCollection.updateAsync(
+      _id,
+      {
+        $set: {
+          ...doc,
+          createdAt: new Date()
+        }
+      });
   },
 });

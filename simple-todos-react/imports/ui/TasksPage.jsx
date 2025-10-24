@@ -33,6 +33,12 @@ export default function TasksPage() {
         });
 
     };
+    const HandleEdit =  ({ _id }) => {
+          navigate(`./edit/${_id}`);
+    };
+
+
+
     const goHome = () => { //botão para voltar a pagina home
         navigate('/homepage');
     }
@@ -74,10 +80,11 @@ export default function TasksPage() {
                 bgcolor: 'background.paper',
                 position: 'relative',
                 overflow: 'auto',
-                maxHeight: 600,
+                borderLeft: 1,
             }}>
                 <TasksForm
-                    HandleAdd={HandleAdd} />
+                    HandleAdd={HandleAdd}
+                    ButtonTxt={"Adicionar Tarefa"} />
                 <h2>Lista de tarefas</h2>
                 <List>
                     {tasks.map((task) => (
@@ -86,6 +93,8 @@ export default function TasksPage() {
                             task={task}
                             HandleApagar={HandleApagar}
                             HandleCheck={HandleCheck}
+                            HandleEdit = {HandleEdit}
+                            disable={false}
                         />
                     ))}
                 </List>

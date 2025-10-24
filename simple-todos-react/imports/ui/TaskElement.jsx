@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { Fragment, useEffect } from 'react';
 import Checkbox from '@mui/material/Checkbox';
 import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
@@ -8,43 +8,59 @@ import Avatar from '@mui/material/Avatar';
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 import PersonIcon from '@mui/icons-material/Person';
+import ModeEditIcon from '@mui/icons-material/ModeEdit';
+import ListItemButton from '@mui/material/ListItemButton';
+
+export default function TaskElement({ task, HandleApagar, HandleCheck, HandleEdit, disable }) {
 
 
-export default function TaskElement({ task, HandleApagar,HandleCheck }) {
-
-  
 
   return (
     <ListItem
       secondaryAction={
-        <IconButton edge="end" aria-label="delete" onClick={()=>HandleApagar(task)}>
-          <DeleteIcon />
-        </IconButton>
+
+
+        <Fragment >
+
+          <IconButton edge="end" disabled={disable} aria-label="edit" onClick={() => HandleEdit(task)}>
+            <ModeEditIcon />
+          </IconButton>
+
+          <IconButton edge="end" disabled={disable} aria-label="delete" onClick={() => HandleApagar(task)}>
+            <DeleteIcon />
+          </IconButton>
+
+
+        </Fragment>
       }
     >
+
       <ListItemIcon>
-       
+
         <Checkbox
+          disabled={disable}
           edge="start"
-          checked={!!task.isChecked}
-          onClick={()=>HandleCheck(task)}
-          
+          checked={task.isChecked}
+          onClick={() => HandleCheck(task)}
+
         />
       </ListItemIcon>
-      
+
       <ListItemAvatar>
-        <Avatar>
-          <PersonIcon />
+        <Avatar
+          sx={{ bgcolor: 'black' }}>{task.owner[0]}
         </Avatar>
       </ListItemAvatar>
-       
+
       <ListItemText
         primary={task.text}
         secondary={task.owner}
       />
-      <span className="task-date">
-              {task.createdAt.toLocaleString('pt-BR')}
-      </span>
+      <ListItemText
+        className="task-date"
+        secondary={task.createdAt?.toLocaleString('pt-BR')}
+      />
+      
     </ListItem>
   );
 }
