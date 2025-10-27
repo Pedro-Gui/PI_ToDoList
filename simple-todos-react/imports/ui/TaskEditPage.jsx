@@ -6,34 +6,26 @@ import { useParams } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import TaskElement from './TaskElement';
 import { TasksForm } from './TasksForm';
-import Checkbox from '@mui/material/Checkbox';
 import ListItem from '@mui/material/ListItem';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
+import Stack from '@mui/material/Stack';
 
 export default function TaskEditPage() {
+    const [situacao, setSituacao] = useState("");
     const user = useTracker(() => Meteor.user()); // lê o usuario atual
     const navigate = useNavigate();                // inicializa o objeto para navegar paginas
     const { taskId } = useParams();
     const isLoading = useSubscribe("task", taskId);       // increve na publicação task com o taskId
+    
     const task = useTracker(() => {
         if (!user || !taskId) { // se não tiver usuario logado, não carrega os dados
             return [];
         }
         return TasksCollection.findOne(taskId);
     }, [taskId]);
-    const [isChecked, setIsChecked] = useState(task.isChecked);
-    const HandleAdd = async (taskText) => {
-
-        await Meteor.callAsync("tasks.edit", {
-            _id: taskId,
-            doc: {
-                text: taskText,
-                isChecked: isChecked,
-            },
-        });
-        navigate('/tasks');
-    };
 
     if (!user) { //  espera user = useTracker(() => Meteor.user()); carregar o usuario
         return (
@@ -48,6 +40,28 @@ export default function TaskEditPage() {
         return <div>Loading...</div>;
     }
 
+    if (user._id !== task.userId) {
+        return (
+            <div className="container">
+                <h1>Usuario não proprietario da tarefa. </h1>
+                <Link to="/tasks">Voltar para tarefas</Link>
+            </div>
+        );
+    }
+    const HandleAdd = async (taskName, taskText) => {
+
+        await Meteor.callAsync("tasks.edit", {
+            _id: taskId,
+            doc: {
+                name: taskName,
+                text: taskText,
+                situacao: situacao,
+            },
+        });
+        navigate('/tasks');
+    };
+
+
     return (
         <div className="app">
             <header>
@@ -60,7 +74,7 @@ export default function TaskEditPage() {
                     <div className="header-info">
                         <h4>Usuário: {user.username} </h4>
 
-                        <button className="Meubutton" onClick={()=>navigate('/tasks')}>Ver tarefas</button>
+                        <button className="Meubutton" onClick={() => navigate('/tasks')}>Ver tarefas</button>
                     </div>
                 </div>
             </header>
@@ -72,19 +86,27 @@ export default function TaskEditPage() {
                 task={task}
                 disable={true}
             />
-            <h2>Área de edição: {task.text} </h2>
-            <ListItem>
-                <ListItemIcon>
-                    <Checkbox
-                        edge="start"
-                        checked={isChecked}
-                        onClick={() => setIsChecked(!isChecked)}
-
-                    />
-                </ListItemIcon>
-                <TasksForm
-                    HandleAdd={HandleAdd}
-                    ButtonTxt={"Editar Tarefa"} />
+            <h2>Área de edição: {task.name} </h2>
+            <ListItem >
+                <Stack direction="row" spacing={2}>
+                    <FormControl>
+                        <InputLabel id="demo-simple-select-label">Situacao</InputLabel>
+                        <Select
+                            labelId="Situacao"
+                            id="Situacao"
+                            value={task.situacao}
+                            label={task.situacao}
+                            onChange={(event) => setSituacao(event.target.value)}
+                        >
+                            <MenuItem value={"Cadastrada"}>Cadastrada</MenuItem>
+                            <MenuItem value={"Em andamento"}>Em andamento</MenuItem>
+                            <MenuItem value={"Concluída"}>Concluída</MenuItem>
+                        </Select>
+                    </FormControl>
+                    <TasksForm
+                        HandleAdd={HandleAdd}
+                        ButtonTxt={"Editar Tarefa"} />
+                </Stack>
             </ListItem>
 
         </div>

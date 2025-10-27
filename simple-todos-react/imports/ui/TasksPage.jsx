@@ -6,6 +6,7 @@ import Box from '@mui/material/Box';
 import TaskElement from './TaskElement';
 import List from '@mui/material/List';
 import { TasksCollection } from "/imports/api/TasksCollection";
+import { Link } from 'react-router-dom';
 
 export default function TasksPage() {
     const user = useTracker(() => Meteor.user()); // lê o usuario atual
@@ -21,14 +22,15 @@ export default function TasksPage() {
         return TasksCollection.find().fetch();
     });
 
-    const HandleCheck = ({ _id, isChecked }) => { Meteor.callAsync("tasks.toggleChecked", { _id, isChecked }); }
+    const HandleChange = ({ _id}, situacao ) => { Meteor.callAsync("tasks.toggleChecked", { _id, situacao });};
     const HandleApagar = ({ _id }) => Meteor.callAsync("tasks.delete", { _id });
-    const HandleAdd = async (taskText) => {
+    const HandleAdd = async (taskName,taskText) => {
         await Meteor.callAsync("tasks.insert", {
+            name: taskName,
             text: taskText,
             userId: user._id,
+            situacao: "Cadastrada",
             owner: user.username,
-            isChecked: false,
             createdAt: new Date(),
         });
 
@@ -43,16 +45,14 @@ export default function TasksPage() {
         navigate('/homepage');
     }
 
-    useEffect(() => {  //volta para a pagina de login automaticamente se o usuario não estiver logado
-        if (!user) {
-            navigate('/');
-        }
-    }, [user, navigate]);
-
     if (!user) { //  espera user = useTracker(() => Meteor.user()); carregar o usuario
-
-        return <div>Carregando...</div>;
-    }
+            return (
+                <div className="container">
+                    <h1>Carregando usuario... </h1>
+                    <Link to="/">Voltar para o login</Link>
+                </div>
+            );
+        }
 
     if (isLoading()) { //  espera TasksCollection.find().fetch(); carregar as tasks
         return <div>Loading...</div>;
@@ -91,8 +91,9 @@ export default function TasksPage() {
                         <TaskElement
                             key={task._id}
                             task={task}
+                            userId = {user._id}
                             HandleApagar={HandleApagar}
-                            HandleCheck={HandleCheck}
+                            HandleChange = {HandleChange}
                             HandleEdit = {HandleEdit}
                             disable={false}
                         />

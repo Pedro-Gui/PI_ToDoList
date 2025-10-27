@@ -12,9 +12,10 @@ Meteor.methods({
       userId: this.userId,
     });
   },
-  "tasks.toggleChecked"({ _id, isChecked }) {
+  "tasks.toggleChecked"({ _id, situacao }) {
+
     return TasksCollection.updateAsync(_id, {
-      $set: { isChecked: !isChecked },
+      $set: { situacao: situacao },
     });
   },
   "tasks.delete"({ _id }) {

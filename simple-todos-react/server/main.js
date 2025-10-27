@@ -4,12 +4,13 @@ import { TasksCollection } from '/imports/api/TasksCollection';
 import "../imports/api/TasksPublications";
 import "../imports/api/tasksMethods";
 
-const insertTask = (taskText, user) =>
+const insertTask = ([nome, taskText, situacao], user) =>
   TasksCollection.insertAsync({
+    name: nome,
     text: taskText,
     userId: user._id,
     owner: user.username,
-    isChecked: false,
+    situacao: situacao,
     createdAt: new Date(),
   });
 
@@ -29,14 +30,14 @@ Meteor.startup(async () => {
 
   if ((await TasksCollection.find().countAsync()) === 0) {
     [
-      "First Task",
-      "Second Task",
-      "Third Task",
-      "Fourth Task",
-      "Fifth Task",
-      "Sixth Task",
-      "Seventh Task",
-    ].forEach((taskText) => insertTask(taskText, user));
+      ["First Task","Clean my room", "Cadastrada"],
+      ["Second Task","Get rid of trash","Em andamento"],
+      ["Third Task","Pre relatorio de c2", "Em andamento"],
+      ["Fourth Task","Prova eletromagnetismo", "Cadastrada"],
+      ["Fifth Task","Prova AOC","Cadastrada"],
+      ["Sixth Task","Iniciar Tarefa", "Concluída"],
+      ["Seventh Task","Finalizar Tarefa","Cadastrada"],
+    ].forEach((taskElements) => insertTask(taskElements, user));
   }
   
 });

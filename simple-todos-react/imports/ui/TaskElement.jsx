@@ -1,5 +1,4 @@
 import React, { Fragment, useEffect } from 'react';
-import Checkbox from '@mui/material/Checkbox';
 import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
@@ -7,22 +6,39 @@ import ListItemText from '@mui/material/ListItemText';
 import Avatar from '@mui/material/Avatar';
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
-import PersonIcon from '@mui/icons-material/Person';
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
-import ListItemButton from '@mui/material/ListItemButton';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
 
-export default function TaskElement({ task, HandleApagar, HandleCheck, HandleEdit, disable }) {
-
-
+export default function TaskElement({ task, userId, HandleApagar, HandleChange, HandleEdit, disable }) {
+  const PodeConcluir = (task.situacao!=="Cadastrada")? false:true;
+  const disableEdit = (userId !== task.userId || disable)? true:false; 
 
   return (
     <ListItem
       secondaryAction={
 
 
-        <Fragment >
+        <Fragment>
+          <FormControl>
+        <InputLabel id="demo-simple-select-label">Age</InputLabel>
+        <Select
+          disabled = {disable}
+          labelId="demo-simple-select-label"
+          id="demo-simple-select"
+          value={task.situacao}
+          label={task.situacao}
+          onChange={(event) => HandleChange(task, event.target.value)}
+        >
+          <MenuItem value={"Cadastrada"}>Cadastrada</MenuItem>
+          <MenuItem value={"Em andamento"}>Em andamento</MenuItem>
+          <MenuItem disabled={PodeConcluir} value={"Concluída"}>Concluída</MenuItem>
+        </Select>
+      </FormControl>
 
-          <IconButton edge="end" disabled={disable} aria-label="edit" onClick={() => HandleEdit(task)}>
+          <IconButton edge="end" disabled={disableEdit} aria-label="edit" onClick={() => HandleEdit(task)}>
             <ModeEditIcon />
           </IconButton>
 
@@ -30,20 +46,13 @@ export default function TaskElement({ task, HandleApagar, HandleCheck, HandleEdi
             <DeleteIcon />
           </IconButton>
 
-
+          
         </Fragment>
       }
     >
 
       <ListItemIcon>
 
-        <Checkbox
-          disabled={disable}
-          edge="start"
-          checked={task.isChecked}
-          onClick={() => HandleCheck(task)}
-
-        />
       </ListItemIcon>
 
       <ListItemAvatar>
@@ -52,15 +61,18 @@ export default function TaskElement({ task, HandleApagar, HandleCheck, HandleEdi
         </Avatar>
       </ListItemAvatar>
 
+
+
       <ListItemText
-        primary={task.text}
-        secondary={task.owner}
-      />
-      <ListItemText
-        className="task-date"
-        secondary={task.createdAt?.toLocaleString('pt-BR')}
+        primary={task.name}
+        secondary={task.text}
       />
       
+      <ListItemText
+        className="task-date"
+        primary={task.owner}
+        secondary={task.createdAt?.toLocaleString('pt-BR')}
+      />
     </ListItem>
   );
 }
