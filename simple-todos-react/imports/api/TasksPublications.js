@@ -7,7 +7,10 @@ Meteor.publish({
     if (!userId) {
       return this.ready();
     }
-    return TasksCollection.find({ userId });
+    return TasksCollection.find({ $or: [
+            { privado: false }, 
+            { userId: userId }  
+        ] });
   },
   "task"(taskId) {
     if (!this.userId) {

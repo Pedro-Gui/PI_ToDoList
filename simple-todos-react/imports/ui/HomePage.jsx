@@ -3,7 +3,7 @@ import React, { Fragment, useEffect } from 'react';
 import { useTracker, useSubscribe } from 'meteor/react-meteor-data';
 import { useNavigate } from 'react-router-dom';
 
-export default function App() {
+export default function HomePage() {
   const user = useTracker(() => Meteor.user()); // carrega o usuario
   const navigate = useNavigate(); // cria o objeto de navegação
   useEffect(() => {

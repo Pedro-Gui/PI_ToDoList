@@ -21,7 +21,14 @@ header {
   position: relative;
   box-shadow: 0 3px 3px rgba(34, 25, 25, 0.4);
 }
-
+.main {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center; 
+    min-height: calc(100vh - 64px);
+    padding-top: 30px;
+}
 .app {
   display: flex;
   flex-direction: column;
@@ -105,6 +112,33 @@ header {
 
 .login-form > div > button {
   background-color: #62807e;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center; 
+    gap: 10px; 
+
+    /* Estilização da div container */
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+}
+
+.container a {
+    color: #333; 
+    text-decoration: none;
+    font-size: 16px;
+    padding: 5px 0; 
+    margin-bottom: 0.5%;
+}
+
+.container a:hover {
+    color: #007bff; 
+    text-decoration: underline; 
 }
 
 .user {

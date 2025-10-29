@@ -12,14 +12,18 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import Stack from '@mui/material/Stack';
+import Radio from '@mui/material/Radio';
+import RadioGroup from '@mui/material/RadioGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
 
 export default function TaskEditPage() {
     const [situacao, setSituacao] = useState("");
+    const [privado, setPrivado] = useState(true);
     const user = useTracker(() => Meteor.user()); // lê o usuario atual
     const navigate = useNavigate();                // inicializa o objeto para navegar paginas
     const { taskId } = useParams();
     const isLoading = useSubscribe("task", taskId);       // increve na publicação task com o taskId
-    
+
     const task = useTracker(() => {
         if (!user || !taskId) { // se não tiver usuario logado, não carrega os dados
             return [];
@@ -47,7 +51,14 @@ export default function TaskEditPage() {
                 <Link to="/tasks">Voltar para tarefas</Link>
             </div>
         );
-    }
+    };
+    const HandlePrivacidade = (event) => {
+        if (event.target.value === "Publico") {
+            setPrivado(false);
+        } else {
+            setPrivado(true);
+        }
+    };
     const HandleAdd = async (taskName, taskText) => {
 
         await Meteor.callAsync("tasks.edit", {
@@ -56,6 +67,7 @@ export default function TaskEditPage() {
                 name: taskName,
                 text: taskText,
                 situacao: situacao,
+                privado: privado,
             },
         });
         navigate('/tasks');
@@ -89,6 +101,17 @@ export default function TaskEditPage() {
             <h2>Área de edição: {task.name} </h2>
             <ListItem >
                 <Stack direction="row" spacing={2}>
+                    
+                    <RadioGroup
+                        aria-labelledby="privacidade"
+                        name="privacidade"
+                        value={(task.privado === true)? "Privado":"Publico"}
+                        onChange={HandlePrivacidade}
+                    >
+                        <FormControlLabel value="Privado" control={<Radio />} label="Privado" />
+                        <FormControlLabel value="Publico" control={<Radio />} label="Público" />
+                    </RadioGroup>
+
                     <FormControl>
                         <InputLabel id="demo-simple-select-label">Situacao</InputLabel>
                         <Select
@@ -103,9 +126,11 @@ export default function TaskEditPage() {
                             <MenuItem value={"Concluída"}>Concluída</MenuItem>
                         </Select>
                     </FormControl>
+                    
                     <TasksForm
                         HandleAdd={HandleAdd}
                         ButtonTxt={"Editar Tarefa"} />
+                    
                 </Stack>
             </ListItem>
 

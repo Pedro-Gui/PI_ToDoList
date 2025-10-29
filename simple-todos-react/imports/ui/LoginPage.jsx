@@ -3,6 +3,7 @@ import { LoginForm } from './LoginForm';
 import { useTracker, useSubscribe } from 'meteor/react-meteor-data';
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 export default function LoginPage() {
     const user = useTracker(() => Meteor.user());
@@ -25,9 +26,13 @@ export default function LoginPage() {
                     </div>
                 </div>
             </header>
-            
-            <div className="main">
+
+            <div>
                 <LoginForm />
+                <div className="container" >
+                    <Link to="/createUser">Criar Conta</Link>
+                    <Link to="/resetPassword">Esqueci minha senha</Link>
+                </div>
             </div>
         </div>
 

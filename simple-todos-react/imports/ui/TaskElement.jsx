@@ -42,7 +42,7 @@ export default function TaskElement({ task, userId, HandleApagar, HandleChange, 
             <ModeEditIcon />
           </IconButton>
 
-          <IconButton edge="end" disabled={disable} aria-label="delete" onClick={() => HandleApagar(task)}>
+          <IconButton edge="end" disabled={disableEdit} aria-label="delete" onClick={() => HandleApagar(task)}>
             <DeleteIcon />
           </IconButton>
 

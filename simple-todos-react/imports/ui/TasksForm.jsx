@@ -10,7 +10,7 @@ export const TasksForm = ({HandleAdd, ButtonTxt}) => {
 
   const handleSubmit = (e) => {
     e.preventDefault(); 
-    if (!Nome && !Desc) return;  
+    if (!Nome || !Desc) return;  
     HandleAdd(Nome,Desc);      
     setNome(""); 
     setDesc("");         

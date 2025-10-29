@@ -3,8 +3,9 @@ import { Meteor } from 'meteor/meteor';
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 // importando as paginas que serão usadas
-import App from '../imports/ui/App.jsx';
+import HomePage from '../imports/ui/HomePage.jsx';
 import LoginPage from '../imports/ui/LoginPage.jsx';
+import CreateUserPage from '../imports/ui/CreateUserPage.jsx';
 import TasksPage from '../imports/ui/TasksPage.jsx';
 import TaskEditPage from '../imports/ui/TaskEditPage.jsx';
 import NotFoundPage from '../imports/ui/NotFoundPage.jsx';
@@ -17,7 +18,8 @@ Meteor.startup(() => {
       <Routes>
         {/*Criando o link da pagina com seu devido componente*/}
         <Route path="/" element={<LoginPage />} />
-        <Route path="/homepage" element={<App />} />
+        <Route path="/createUser" element={<CreateUserPage />} />
+        <Route path="/homepage" element={<HomePage />} />
         <Route path="/tasks" element={<TasksPage />} />
         <Route path="/tasks/edit/:taskId" element={<TaskEditPage />} />
         <Route path="*" element={<NotFoundPage />} />

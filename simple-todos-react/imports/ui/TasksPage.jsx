@@ -30,6 +30,7 @@ export default function TasksPage() {
             text: taskText,
             userId: user._id,
             situacao: "Cadastrada",
+            privado: false,
             owner: user.username,
             createdAt: new Date(),
         });
@@ -85,7 +86,8 @@ export default function TasksPage() {
                 <TasksForm
                     HandleAdd={HandleAdd}
                     ButtonTxt={"Adicionar Tarefa"} />
-                <h2>Lista de tarefas</h2>
+                <h2 sx={{display: "flex",
+    align: "center",}}>Lista de tarefas</h2>
                 <List>
                     {tasks.map((task) => (
                         <TaskElement
