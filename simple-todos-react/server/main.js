@@ -25,6 +25,9 @@ const SEED_FIRSTNAME = "Pedro Guilherme";
 const SEED_LASTNAME = "Andrade Salgado";
 
 Meteor.startup(async () => {
+  process.env.MAIL_URL="smtps://"+encodeURIComponent("resetsenhatodolist@gmail.com")+":"+encodeURIComponent("hcsbsohwkwaqpqzg")+"@smtp.gmail.com:465";
+  Accounts.urls.resetPassword = (token) => {       return Meteor.absoluteUrl(`/reset-password/${token}`);};
+  Accounts.urls.verifyEmail = (token) => {       return Meteor.absoluteUrl(`/verify-email/${token}`);};
   // If the Links collection is empty, add some data.
   if (!(await Accounts.findUserByUsername(SEED_USERNAME))) {
     await Accounts.createUser({

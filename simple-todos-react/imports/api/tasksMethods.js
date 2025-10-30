@@ -39,25 +39,32 @@ Meteor.methods({
   async "CreateUser"(doc) {
 
     if (!doc.email || !doc.password || !doc.username) {
-            return 'Email, Nome de Usuário e Senha são obrigatórios.';
-        }
-
-    if (!(await Accounts.findUserByUsername(doc.username))) {
-      await Accounts.createUserAsync({
-        username: doc.username, 
-        email: doc.email,       
-        password: doc.password, 
-        profile: {
-                primeiroNome: doc.primeiroNome,
-                segundoNome: doc.segundoNome,
-                empresa: doc.empresa,
-                sexo: doc.sexo,
-                dataNasc: new Date(doc.dataNasc), 
-                createdAt: new Date(),
-            },
-      });
-      return("Cadastro feito com sucesso");
+      return new Meteor.Error('campos-obrigatorios', 'Email, Nome de Usuário e Senha são obrigatórios.');
     }
-      return("Cadastro já existente!");
+if (!(await Accounts.findUserByEmail(doc.email))) {
+    if (!(await Accounts.findUserByUsername(doc.username))) {
+      const userId = await Accounts.createUserAsync({
+        username: doc.username,
+        email: doc.email,
+        password: doc.password,
+        profile: {
+          primeiroNome: doc.primeiroNome,
+          segundoNome: doc.segundoNome,
+          empresa: doc.empresa,
+          sexo: doc.sexo,
+          dataNasc: new Date(doc.dataNasc),
+          createdAt: new Date(),
+        },
+      });
+
+      if (userId) {
+            Accounts.sendVerificationEmail(userId, doc.email);
+        }
+      return ("Cadastro feito com sucesso");
+    }
+    
+    return new Meteor.Error('usuario-existente', 'Cadastro já existente!');
+  }
+    return new Meteor.Error('email-existente', 'Cadastro já existente!');
   },
 });

@@ -31,7 +31,7 @@ export default function LoginPage() {
                 <LoginForm />
                 <div className="container" >
                     <Link to="/createUser">Criar Conta</Link>
-                    <Link to="/resetPassword">Esqueci minha senha</Link>
+                    <Link to="/reset-password">Esqueci minha senha</Link>
                 </div>
             </div>
         </div>

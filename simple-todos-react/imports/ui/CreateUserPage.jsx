@@ -46,7 +46,14 @@ export default function CreateUserPage() {
             dataNasc: DataNasc ? DataNasc.toISOString() : null,
         })
         console.log(resultado);
-        if(resultado === "Cadastro feito com sucesso"){Meteor.loginWithPassword(UserName, Password);navigate('/homepage');}      
+        if(resultado === "Cadastro feito com sucesso"){
+            Meteor.loginWithPassword(UserName, Password); 
+            alert("Cadastro realizado, um email de verificação foi enviado.");
+            navigate('/homepage');
+        }  
+        else{
+            alert(`Erro: ${resultado.reason}`)
+        }   
     }
 
     return (
