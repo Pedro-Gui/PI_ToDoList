@@ -1,12 +1,14 @@
 import React, { useEffect } from 'react';
 import { useTracker, useSubscribe } from 'meteor/react-meteor-data';
 import { useNavigate } from 'react-router-dom';
+import PersistentDrawerLeft from './Drawer';
 import { TasksForm } from './TasksForm';
 import Box from '@mui/material/Box';
 import TaskElement from './TaskElement';
 import List from '@mui/material/List';
 import { TasksCollection } from "/imports/api/TasksCollection";
 import { Link } from 'react-router-dom';
+import Container from '@mui/material/Container';
 
 export default function TasksPage() {
     const user = useTracker(() => Meteor.user()); // lê o usuario atual
@@ -22,22 +24,22 @@ export default function TasksPage() {
         return TasksCollection.find().fetch();
     });
 
-    const HandleChange = ({ _id}, situacao ) => { Meteor.callAsync("tasks.toggleChecked", { _id, situacao });};
+    const HandleChange = ({ _id }, situacao) => {if(situacao){ Meteor.callAsync("tasks.toggleChecked", { _id, situacao });} };
     const HandleApagar = ({ _id }) => Meteor.callAsync("tasks.delete", { _id });
-    const HandleAdd = async (taskName,taskText) => {
+    const HandleAdd = async (taskName, taskText, situacao, privado) => {
         await Meteor.callAsync("tasks.insert", {
             name: taskName,
             text: taskText,
             userId: user._id,
-            situacao: "Cadastrada",
-            privado: false,
+            situacao: situacao,
+            privado: privado,
             owner: user.username,
             createdAt: new Date(),
         });
 
     };
-    const HandleEdit =  ({ _id }) => {
-          navigate(`./edit/${_id}`);
+    const HandleEdit = ({ _id }) => {
+        navigate(`./edit/${_id}`);
     };
 
 
@@ -47,13 +49,13 @@ export default function TasksPage() {
     }
 
     if (!user) { //  espera user = useTracker(() => Meteor.user()); carregar o usuario
-            return (
-                <div className="container">
-                    <h1>Carregando usuario... </h1>
-                    <Link to="/">Voltar para o login</Link>
-                </div>
-            );
-        }
+        return (
+            <div className="container">
+                <h1>Carregando usuario... </h1>
+                <Link to="/">Voltar para o login</Link>
+            </div>
+        );
+    }
 
     if (isLoading()) { //  espera TasksCollection.find().fetch(); carregar as tasks
         return <div>Loading...</div>;
@@ -61,48 +63,40 @@ export default function TasksPage() {
 
     return (
         <div className="app">
-            <header>
-                <div className="app-bar">
-                    <div className="app-header">
-                        <h1>PI Synergia Pedro Guilherme
-                        </h1>
+            <PersistentDrawerLeft />
+            <Container sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
 
-                    </div>
-                    <div className="header-info">
-                        <h4>Usuário: {user.username} </h4>
-
-                        <button className="Meubutton" onClick={goHome}>Voltar para Home</button>
-                    </div>
-                </div>
-            </header>
-
-            <Box sx={{
-                width: '100%',
-                bgcolor: 'background.paper',
-                position: 'relative',
-                overflow: 'auto',
-                borderLeft: 1,
             }}>
+
+                <Box className="container" sx={{ marginTop:2,marginBottom:2, color: 'text.primary', fontSize: 20, fontWeight: 'medium', alignSelf: 'stretch',textAlign:'center' }}>
+                    Criar tarefa
+                </Box>
+                
                 <TasksForm
+          
                     HandleAdd={HandleAdd}
                     ButtonTxt={"Adicionar Tarefa"} />
-                <h2 sx={{display: "flex",
-    align: "center",}}>Lista de tarefas</h2>
-                <List>
+                <Box className="container" sx={{ marginTop:2, color: 'text.primary', fontSize: 20, fontWeight: 'medium', alignSelf: 'stretch',textAlign:'center' }}>
+                    Lista de tarefas
+                </Box>
+                <List sx={{ alignSelf: 'stretch', }}>
                     {tasks.map((task) => (
                         <TaskElement
                             key={task._id}
                             task={task}
-                            userId = {user._id}
+                            userId={user._id}
                             HandleApagar={HandleApagar}
-                            HandleChange = {HandleChange}
-                            HandleEdit = {HandleEdit}
+                            HandleChange={HandleChange}
+                            HandleEdit={HandleEdit}
                             disable={false}
                         />
                     ))}
                 </List>
-            </Box>
 
-        </div>
+            </Container>
+        </div >
     );
 }

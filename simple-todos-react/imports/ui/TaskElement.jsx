@@ -13,30 +13,42 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 
 export default function TaskElement({ task, userId, HandleApagar, HandleChange, HandleEdit, disable }) {
-  const PodeConcluir = (task.situacao!=="Cadastrada")? false:true;
-  const disableEdit = (userId !== task.userId || disable)? true:false; 
+  const PodeConcluir = (task.situacao !== "Cadastrada") ? false : true;
+  const disableEdit = (userId !== task.userId || disable) ? true : false;
 
   return (
     <ListItem
+      variant="outlined"
+      size="small"
+      sx={{
+        minWidth: 'auto',
+        display: 'flex'
+      }}
       secondaryAction={
 
 
         <Fragment>
-          <FormControl>
-        <InputLabel id="demo-simple-select-label">Age</InputLabel>
-        <Select
-          disabled = {disable}
-          labelId="demo-simple-select-label"
-          id="demo-simple-select"
-          value={task.situacao}
-          label={task.situacao}
-          onChange={(event) => HandleChange(task, event.target.value)}
-        >
-          <MenuItem value={"Cadastrada"}>Cadastrada</MenuItem>
-          <MenuItem value={"Em andamento"}>Em andamento</MenuItem>
-          <MenuItem disabled={PodeConcluir} value={"Concluída"}>Concluída</MenuItem>
-        </Select>
-      </FormControl>
+          <FormControl
+            variant="outlined"
+            size="small"
+            sx={{
+              minWidth: 160
+            }}>
+            <InputLabel id="situacao">Situação</InputLabel>
+            <Select
+
+              disabled={disable}
+              labelId="situacao"
+              id="situacao"
+              value={task.situacao}
+              label={task.situacao}
+              onChange={(event) => HandleChange(task, event.target.value)}
+            >
+              <MenuItem value={"Cadastrada"}>Cadastrada</MenuItem>
+              <MenuItem value={"Em andamento"}>Em andamento</MenuItem>
+              <MenuItem disabled={PodeConcluir} value={"Concluída"}>Concluída</MenuItem>
+            </Select>
+          </FormControl>
 
           <IconButton edge="end" disabled={disableEdit} aria-label="edit" onClick={() => HandleEdit(task)}>
             <ModeEditIcon />
@@ -46,32 +58,28 @@ export default function TaskElement({ task, userId, HandleApagar, HandleChange, 
             <DeleteIcon />
           </IconButton>
 
-          
+
         </Fragment>
       }
     >
-
-      <ListItemIcon>
-
-      </ListItemIcon>
-
       <ListItemAvatar>
         <Avatar
           sx={{ bgcolor: 'black' }}>{task.owner[0]}
         </Avatar>
       </ListItemAvatar>
 
-
-
       <ListItemText
+
         primary={task.name}
         secondary={task.text}
+        sx={{flex: '0 1 auto', minWidth: '200px'}}
       />
-      
+
       <ListItemText
         className="task-date"
         primary={task.owner}
         secondary={task.createdAt?.toLocaleString('pt-BR')}
+        sx={{flex: '1 1 auto'}}
       />
     </ListItem>
   );

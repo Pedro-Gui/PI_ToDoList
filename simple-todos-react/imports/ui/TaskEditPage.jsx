@@ -1,40 +1,34 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTracker, useSubscribe } from 'meteor/react-meteor-data';
 import { useNavigate } from 'react-router-dom';
 import { TasksCollection } from "/imports/api/TasksCollection";
 import { useParams } from 'react-router-dom';
 import { Link } from 'react-router-dom';
+import PersistentDrawerLeft from './Drawer';
 import TaskElement from './TaskElement';
 import { TasksForm } from './TasksForm';
+import Container from '@mui/material/Container';
+import Box from '@mui/material/Box';
 import ListItem from '@mui/material/ListItem';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
-import Stack from '@mui/material/Stack';
-import Radio from '@mui/material/Radio';
-import RadioGroup from '@mui/material/RadioGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
+
 
 export default function TaskEditPage() {
-    const [situacao, setSituacao] = useState("");
-    const [privado, setPrivado] = useState(true);
-    const user = useTracker(() => Meteor.user()); // lê o usuario atual
-    const navigate = useNavigate();                // inicializa o objeto para navegar paginas
-    const { taskId } = useParams();
-    const isLoading = useSubscribe("task", taskId);       // increve na publicação task com o taskId
 
-    const task = useTracker(() => {
-        if (!user || !taskId) { // se não tiver usuario logado, não carrega os dados
-            return [];
-        }
-        return TasksCollection.findOne(taskId);
+    const navigate = useNavigate();                // inicializa o objeto para navegar paginas
+    const { taskId } = useParams();     // increve na publicação task com o taskId
+    const isLoading = useSubscribe("task", taskId);
+
+    const { task, user } = useTracker(() => {
+        const task = TasksCollection.findOne(taskId);
+        const user = Meteor.user();
+        return { task, user };
     }, [taskId]);
 
-    if (!user) { //  espera user = useTracker(() => Meteor.user()); carregar o usuario
+
+    if (!user || !user._id) { //  espera user = useTracker(() => Meteor.user()); carregar o usuario
         return (
             <div className="container">
-                <h1>Carregando usuario... </h1>
+                <h1>Carregando usuario e tarefa... </h1>
                 <Link to="/">Voltar para o login</Link>
             </div>
         );
@@ -43,8 +37,18 @@ export default function TaskEditPage() {
     if (isLoading()) { //  espera TasksCollection.find(); carregar as tasks
         return <div>Loading...</div>;
     }
+    if (!task) {
+        return (
+            <div className="container">
+                <h1>Tarefa não encontrada.</h1>
+                <Link to="/tasks">Voltar para tarefas</Link>
+            </div>
+        );
+    }
 
     if (user._id !== task.userId) {
+        console.log(user);
+        console.log(task);
         return (
             <div className="container">
                 <h1>Usuario não proprietario da tarefa. </h1>
@@ -52,15 +56,9 @@ export default function TaskEditPage() {
             </div>
         );
     };
-    const HandlePrivacidade = (event) => {
-        if (event.target.value === "Publico") {
-            setPrivado(false);
-        } else {
-            setPrivado(true);
-        }
-    };
-    const HandleAdd = async (taskName, taskText) => {
 
+
+    const HandleAdd = async (taskName, taskText, situacao, privado) => {
         await Meteor.callAsync("tasks.edit", {
             _id: taskId,
             doc: {
@@ -73,67 +71,34 @@ export default function TaskEditPage() {
         navigate('/tasks');
     };
 
-
     return (
         <div className="app">
-            <header>
-                <div className="app-bar">
-                    <div className="app-header">
-                        <h1>PI Synergia Pedro Guilherme
-                        </h1>
+            <PersistentDrawerLeft />
+            <Container sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
 
-                    </div>
-                    <div className="header-info">
-                        <h4>Usuário: {user.username} </h4>
+            }}>
+                <Box className="container" sx={{ marginTop: 2, marginBottom: 2, color: 'text.primary', fontSize: 20, fontWeight: 'medium', alignSelf: 'stretch', textAlign: 'center' }}>
+                    Tarefa atual
+                </Box>
+                <TaskElement
+                    key={task._id}
+                    task={task}
+                    disable={true}
+                />
+                <Box className="container" sx={{ marginTop: 2, marginBottom: 2, color: 'text.primary', fontSize: 20, fontWeight: 'medium', alignSelf: 'stretch', textAlign: 'center' }}>
+                    Editar tarefa
+                </Box>
+                <ListItem >
 
-                        <button className="Meubutton" onClick={() => navigate('/tasks')}>Ver tarefas</button>
-                    </div>
-                </div>
-            </header>
-
-            <h1>Pagina de edição</h1>
-            <h2>Tarefa antiga </h2>
-            <TaskElement
-                key={task._id}
-                task={task}
-                disable={true}
-            />
-            <h2>Área de edição: {task.name} </h2>
-            <ListItem >
-                <Stack direction="row" spacing={2}>
-                    
-                    <RadioGroup
-                        aria-labelledby="privacidade"
-                        name="privacidade"
-                        value={(task.privado === true)? "Privado":"Publico"}
-                        onChange={HandlePrivacidade}
-                    >
-                        <FormControlLabel value="Privado" control={<Radio />} label="Privado" />
-                        <FormControlLabel value="Publico" control={<Radio />} label="Público" />
-                    </RadioGroup>
-
-                    <FormControl>
-                        <InputLabel id="demo-simple-select-label">Situacao</InputLabel>
-                        <Select
-                            labelId="Situacao"
-                            id="Situacao"
-                            value={task.situacao}
-                            label={task.situacao}
-                            onChange={(event) => setSituacao(event.target.value)}
-                        >
-                            <MenuItem value={"Cadastrada"}>Cadastrada</MenuItem>
-                            <MenuItem value={"Em andamento"}>Em andamento</MenuItem>
-                            <MenuItem value={"Concluída"}>Concluída</MenuItem>
-                        </Select>
-                    </FormControl>
-                    
                     <TasksForm
+                        task={task}
                         HandleAdd={HandleAdd}
                         ButtonTxt={"Editar Tarefa"} />
-                    
-                </Stack>
-            </ListItem>
-
+                </ListItem>
+            </Container>
         </div>
     );
 }

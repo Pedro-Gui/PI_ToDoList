@@ -24,6 +24,8 @@ import MailIcon from '@mui/icons-material/Mail';
 import LogoutIcon from '@mui/icons-material/Logout';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import HomeFilledIcon from '@mui/icons-material/HomeFilled';
+import Stack from '@mui/material/Stack';
 
 const drawerWidth = 240;
 
@@ -147,19 +149,22 @@ export default function PersistentDrawerLeft() {
                     </IconButton>
                 </DrawerHeader>
                 <Divider />
-                <List sx={{ margin: '20px', padding: '10px' }}>
-                    <ListItemText secondary="Username:" />
-                    <ListItemText primary={user.username}  />
-                    <ListItemText secondary="Email:"/>
-                    <ListItemText primary={user.emails[0].address} />
-                </List>
-                <Divider />
                 <List>
                     <ListItemButton onClick={() => { navigate('/infos') }}>
                         <ListItemIcon>
                             <AccountCircleIcon />
                         </ListItemIcon>
-                        <ListItemText primary="Perfil" />
+                        <Stack direction="column" spacing={1}>
+                            <ListItemText secondary={user.username} />
+                            <ListItemText  secondary={user.emails[0].address} />
+                        </Stack>
+
+                    </ListItemButton>
+                    <ListItemButton onClick={() => { navigate('/homepage') }}>
+                        <ListItemIcon>
+                            <HomeFilledIcon />
+                        </ListItemIcon>
+                        <ListItemText primary="Home" />
                     </ListItemButton>
                     <ListItemButton onClick={() => { navigate('/tasks') }}>
                         <ListItemIcon>
