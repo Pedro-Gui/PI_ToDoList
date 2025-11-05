@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTracker, useSubscribe } from 'meteor/react-meteor-data';
 import { useNavigate } from 'react-router-dom';
 import PersistentDrawerLeft from './Drawer';
@@ -9,22 +9,33 @@ import List from '@mui/material/List';
 import { TasksCollection } from "/imports/api/TasksCollection";
 import { Link } from 'react-router-dom';
 import Container from '@mui/material/Container';
+import FormLabel from '@mui/material/FormLabel';
+import FormControl from '@mui/material/FormControl';
+import FormGroup from '@mui/material/FormGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import FormHelperText from '@mui/material/FormHelperText';
+import Switch from '@mui/material/Switch';
 
 export default function TasksPage() {
     const user = useTracker(() => Meteor.user()); // lê o usuario atual
     const navigate = useNavigate();                // inicializa o objeto para navegar paginas
-    const isLoading = useSubscribe("tasks");       // verifica se as tasks foram carregadas
+    
+    const [hideCompleted, setHideCompleted] = useState(false);
 
+    const isLoading = useSubscribe("tasks",hideCompleted); 
 
     const tasks = useTracker(() => { // se não tiver usuario logado, não carrega os dados
         if (!user) {
             return [];
         }
-
-        return TasksCollection.find().fetch();
+        return TasksCollection.find( {},
+            {
+                sort: { createdAt: -1 },
+            }).fetch();
     });
 
-    const HandleChange = ({ _id }, situacao) => {if(situacao){ Meteor.callAsync("tasks.toggleChecked", { _id, situacao });} };
+
+    const HandleChange = ({ _id }, situacao) => { if (situacao) { Meteor.callAsync("tasks.toggleSituacao", { _id, situacao }); } };
     const HandleApagar = ({ _id }) => Meteor.callAsync("tasks.delete", { _id });
     const HandleAdd = async (taskName, taskText, situacao, privado) => {
         await Meteor.callAsync("tasks.insert", {
@@ -43,11 +54,6 @@ export default function TasksPage() {
     };
 
 
-
-    const goHome = () => { //botão para voltar a pagina home
-        navigate('/homepage');
-    }
-
     if (!user) { //  espera user = useTracker(() => Meteor.user()); carregar o usuario
         return (
             <div className="container">
@@ -55,10 +61,6 @@ export default function TasksPage() {
                 <Link to="/">Voltar para o login</Link>
             </div>
         );
-    }
-
-    if (isLoading()) { //  espera TasksCollection.find().fetch(); carregar as tasks
-        return <div>Loading...</div>;
     }
 
     return (
@@ -71,17 +73,31 @@ export default function TasksPage() {
 
             }}>
 
-                <Box className="container" sx={{ marginTop:2,marginBottom:2, color: 'text.primary', fontSize: 20, fontWeight: 'medium', alignSelf: 'stretch',textAlign:'center' }}>
+                <Box className="container" sx={{ marginTop: 2, marginBottom: 2, color: 'text.primary', fontSize: 20, fontWeight: 'medium', alignSelf: 'stretch', textAlign: 'center' }}>
                     Criar tarefa
                 </Box>
-                
+
                 <TasksForm
-          
+
                     HandleAdd={HandleAdd}
                     ButtonTxt={"Adicionar Tarefa"} />
-                <Box className="container" sx={{ marginTop:2, color: 'text.primary', fontSize: 20, fontWeight: 'medium', alignSelf: 'stretch',textAlign:'center' }}>
-                    Lista de tarefas
+                <Box className="container" display={'flex'} flexDirection={'row'} alignItems={'center'} >
+                    <Box sx={{ flexGrow: 1,textAlign:'center' }}> 
+                        {hideCompleted ? "Lista de tarefas pendentes" : "Lista de tarefas completa" }
+                    </Box>
+                    <FormControl component="fieldset" variant="standard">
+                        <FormGroup>
+                            <FormControlLabel
+                                // label="Exibir tarefas concluídas"
+                                control={
+                                    <Switch checked={!hideCompleted} onChange={() => setHideCompleted(!hideCompleted)} name="gilad" />
+                                }
+                            />
+                        </FormGroup>
+                    </FormControl>
                 </Box>
+
+                {isLoading() ? <div>Loading...</div> :
                 <List sx={{ alignSelf: 'stretch', }}>
                     {tasks.map((task) => (
                         <TaskElement
@@ -94,7 +110,8 @@ export default function TasksPage() {
                             disable={false}
                         />
                     ))}
-                </List>
+                </List>}
+                
 
             </Container>
         </div >

@@ -21,12 +21,12 @@ export default function HomePage() {
     const user = Meteor.user();
 
     const Cadastradas = TasksCollection.find().count();
-    
+
     const Concluidas = TasksCollection.find(
       {
         situacao: "Concluída"
       }).count();
-      
+
     return {
       taskAnalise: {
         Cadastradas: Cadastradas,
@@ -35,18 +35,19 @@ export default function HomePage() {
       user: user
     };
   });
-
-
-  if (!user) {
-    <div className="container">
-      <h1>Carregando usuario... </h1>
-      <Link to="/">Voltar para o login</Link>
-    </div>
+  
+  if (!user) { //  espera user = useTracker(() => Meteor.user()); carregar o usuario
+    return (
+      <div className="container">
+        <h1>Carregando usuario... </h1>
+        <Link to="/">Voltar para o login</Link>
+      </div>
+    );
   }
-if (isLoading()) { //  espera TasksCollection.find(); carregar as tasks
+  if (isLoading()) { //  espera TasksCollection.find(); carregar as tasks
     return <div>Loading...</div>;
   }
-  
+
 
   return (
     <div className="app">
@@ -58,7 +59,7 @@ if (isLoading()) { //  espera TasksCollection.find(); carregar as tasks
         alignItems: 'center',
 
       }}>
-        <Box className="container" sx={{ marginTop: 2, marginBottom: 2, color: 'text.primary', fontSize: 20, fontWeight: 'medium', alignSelf: 'stretch', textAlign: 'center' }}>
+        <Box className="container">
           Olá {user.profile.firstname}, seja bem vindo ao Todo List !
         </Box>
         <Stack direction="column" spacing={2}>
@@ -78,7 +79,7 @@ if (isLoading()) { //  espera TasksCollection.find(); carregar as tasks
 
               <CardContent>
                 <Typography variant="body2" sx={{ color: 'text.secondary', whiteSpace: 'pre-line' }}>
-                  Total de tarefas concluídas {"\n"}.
+                  Total de tarefas concluídas {"\n"}{"\n"}
 
                 </Typography>
                 <Typography gutterBottom variant="h2" component="div">
@@ -117,7 +118,7 @@ if (isLoading()) { //  espera TasksCollection.find(); carregar as tasks
           </Stack>
 
         </Stack>
-        <Box className="container" sx={{ marginTop: 2, marginBottom: 2, color: 'text.primary', fontSize: 20, fontWeight: 'medium', alignSelf: 'stretch', textAlign: 'center', height: 35 }}>
+        <Box className="container" sx={{  height: 35 }}>
         </Box>
       </Container>
     </div>

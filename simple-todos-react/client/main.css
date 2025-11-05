@@ -14,6 +14,7 @@ body {
 
   font-size: 14px;
 }
+
 header {
   margin-bottom: 1%;
   background: #ffffff;
@@ -21,14 +22,16 @@ header {
   position: relative;
   box-shadow: 0 3px 3px rgba(34, 25, 25, 0.4);
 }
+
 .main {
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-    justify-content: center; 
-    min-height: calc(100vh - 64px);
-    padding-top: 30px;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  min-height: calc(100vh - 64px);
+  padding-top: 30px;
 }
+
 .app {
   display: flex;
   flex-direction: column;
@@ -41,12 +44,13 @@ header {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
 .header-info {
-  display: flex; 
+  display: flex;
   justify-content: space-between;
-  align-items: center; 
+  align-items: center;
   width: 100%;
-  gap: 16px; 
+  gap: 16px;
 }
 
 
@@ -57,30 +61,31 @@ header {
   font-weight: bold;
   font-size: 1em;
   background-color: #ffffff;
-  color: #555; 
+  color: #555;
   border: 2px solid #ddd;
   border-radius: 4px;
   margin-bottom: 1%;
   margin-left: 1%;
   box-shadow: 0 3px 3px rgba(34, 25, 25, 0.4);
-  padding: 5px 15px; 
+  padding: 5px 15px;
   cursor: pointer;
   transition: all 0.3s ease;
   white-space: nowrap;
-  min-width: 110px; 
+  min-width: 110px;
   text-align: center;
 }
 
-.Meubutton:hover { 
-  background-color: #f9f9f9; 
-  border-color: #bbb; 
-  color: #000; 
+.Meubutton:hover {
+  background-color: #f9f9f9;
+  border-color: #bbb;
+  color: #000;
 }
 
-.Meubutton:active { 
+.Meubutton:active {
   background-color: #eee;
   transform: scale(0.98);
 }
+
 .login-form {
   display: flex;
   flex-direction: column;
@@ -90,15 +95,15 @@ header {
   align-items: center;
 }
 
-.login-form > div {
+.login-form>div {
   margin: 8px;
 }
 
-.login-form > div > label {
+.login-form>div>label {
   font-weight: bold;
 }
 
-.login-form > div > input {
+.login-form>div>input {
   flex-grow: 1;
   box-sizing: border-box;
   padding: 10px 6px;
@@ -110,39 +115,46 @@ header {
   margin-top: 4px;
 }
 
-.login-form > div > input:focus {
+.login-form>div>input:focus {
   outline: 0;
 }
 
-.login-form > div > button {
+.login-form>div>button {
   background-color: #62807e;
 }
 
 .container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center; 
-    gap: 10px; 
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
 
-    /* Estilização da div container */
-    padding: 5px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    background-color: #f9f9f9;
+  /* Estilização da div container */
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  margin-top: 16px;
+  margin-bottom: 16px;
+  color: currentColor;
+  font-size: 20px;
+  font-weight:500;
+  align-self: stretch;
+  text-align: center;
 }
 
 .container a {
-    color: #333; 
-    text-decoration: none;
-    font-size: 16px;
-    padding: 5px 0; 
-    margin-bottom: 0.5%;
+  color: #333;
+  text-decoration: none;
+  font-size: 16px;
+  padding: 5px 0;
+  margin-bottom: 0.5%;
 }
 
 .container a:hover {
-    color: #bababa; 
-    text-decoration: underline; 
+  color: #bababa;
+  text-decoration: underline;
 }
 
 .user {

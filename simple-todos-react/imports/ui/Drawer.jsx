@@ -19,13 +19,14 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
 import MailIcon from '@mui/icons-material/Mail';
 import LogoutIcon from '@mui/icons-material/Logout';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import HomeFilledIcon from '@mui/icons-material/HomeFilled';
 import Stack from '@mui/material/Stack';
+import Avatar from '@mui/material/Avatar';
+
 
 const drawerWidth = 240;
 
@@ -150,16 +151,41 @@ export default function PersistentDrawerLeft() {
                 </DrawerHeader>
                 <Divider />
                 <List>
-                    <ListItemButton onClick={() => { navigate('/infos') }}>
-                        <ListItemIcon>
+                    <ListItem sx={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                    }}>
+                        <Avatar 
+                        alt="avatar" 
+                        src={user.profile.imagem ? user.profile.imagem : ""} 
+                        sx={{ width: '35%', aspectRatio: '1 / 1', height: 'auto' }} >
                             <AccountCircleIcon />
-                        </ListItemIcon>
-                        <Stack direction="column" spacing={1}>
-                            <ListItemText secondary={user.username} />
-                            <ListItemText  secondary={user.emails[0].address} />
+                        </Avatar>
+                    </ListItem>
+
+                    <ListItemButton onClick={() => { navigate('/userinfo') }}>
+                        <Stack direction="column" spacing={2} >
+                            <Stack direction="row"  >
+                                <ListItemIcon> <AccountCircleIcon /></ListItemIcon>
+                                <ListItemText primary={user.username} />
+                            </Stack>
+                            <Stack direction="row"  >
+                                <ListItemIcon><MailIcon /></ListItemIcon>
+                                {user.emails && user.emails[0] ?
+                                    <ListItemText primary={user.emails[0].address} /> :
+                                    <ListItemText primary="Email não encontrado"  />}
+                            </Stack>
+
+
                         </Stack>
 
                     </ListItemButton>
+                </List>
+
+                <Divider />
+
+                <List>
+
                     <ListItemButton onClick={() => { navigate('/homepage') }}>
                         <ListItemIcon>
                             <HomeFilledIcon />

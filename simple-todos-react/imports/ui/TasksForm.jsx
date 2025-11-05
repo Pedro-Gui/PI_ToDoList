@@ -96,6 +96,7 @@ export const TasksForm = (
           variant="outlined"
           value={Desc}
           onChange={(e) => setDesc(e.target.value)}
+          multiline
         />
 
 

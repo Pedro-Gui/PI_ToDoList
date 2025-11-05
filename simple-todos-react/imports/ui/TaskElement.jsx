@@ -1,6 +1,5 @@
-import React, { Fragment, useEffect } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import ListItem from '@mui/material/ListItem';
-import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import ListItemText from '@mui/material/ListItemText';
 import Avatar from '@mui/material/Avatar';
@@ -11,10 +10,30 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
 export default function TaskElement({ task, userId, HandleApagar, HandleChange, HandleEdit, disable }) {
   const PodeConcluir = (task.situacao !== "Cadastrada") ? false : true;
   const disableEdit = (userId !== task.userId || disable) ? true : false;
+  const [imagem, setImagem] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    async function taskimage() {
+      if (task.userId) {
+        const url = await Meteor.callAsync("getUserImagem", task.userId);
+        if (url.reason === "Sucesso") {
+          setImagem(url.imagem);
+          setIsLoading(true);
+        } else {
+          console.error("Erro ao buscar imagem:", url.reason);
+          setImagem(null);
+          setIsLoading(false);
+        }
+      }
+    }
+    taskimage();
+  }, [task.userId]);
 
   return (
     <ListItem
@@ -62,24 +81,24 @@ export default function TaskElement({ task, userId, HandleApagar, HandleChange, 
         </Fragment>
       }
     >
-      <ListItemAvatar>
-        <Avatar
-          sx={{ bgcolor: 'black' }}>{task.owner[0]}
-        </Avatar>
+      <ListItemAvatar sx={{maxWidth:'3%'}}>
+        {isLoading ?
+          <Avatar alt="Upload new avatar" src={imagem} sx={{ width: '80%', aspectRatio: '1 / 1', height: 'auto', }} /> :
+          <Avatar> <AccountCircleIcon /> </Avatar>}
       </ListItemAvatar>
 
       <ListItemText
 
         primary={task.name}
         secondary={task.text}
-        sx={{flex: '0 1 auto', minWidth: '200px'}}
+        sx={{ flex: '0 1 auto', minWidth: '200px' }}
       />
 
       <ListItemText
         className="task-date"
         primary={task.owner}
         secondary={task.createdAt?.toLocaleString('pt-BR')}
-        sx={{flex: '1 1 auto'}}
+        sx={{ flex: '1 1 auto' }}
       />
     </ListItem>
   );

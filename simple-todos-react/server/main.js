@@ -4,6 +4,7 @@ import { TasksCollection } from '/imports/api/TasksCollection';
 import "../imports/api/TasksPublications";
 import "../imports/api/tasksMethods";
 
+
 const insertTask = ([nome, taskText, situacao, privado], user) =>
   TasksCollection.insertAsync({
     name: nome,
@@ -23,11 +24,49 @@ const SEED_SEXO = "Masculino";
 const SEED_EMPRESA = "SYNERGIA";
 const SEED_FIRSTNAME = "Pedro Guilherme";
 const SEED_LASTNAME = "Andrade Salgado";
+const SEED_IMAGEM_SRC = "picture/AllMightPic.png" ;
+
+function bytesToBase64(bytes) {
+  const binString = Array.from(bytes, (byte) =>
+    String.fromCodePoint(byte),
+  ).join("");
+  return btoa(binString);
+}
 
 Meteor.startup(async () => {
-  process.env.MAIL_URL="smtps://"+encodeURIComponent("resetsenhatodolist@gmail.com")+":"+encodeURIComponent("hcsbsohwkwaqpqzg")+"@smtp.gmail.com:465";
-  Accounts.urls.resetPassword = (token) => {       return Meteor.absoluteUrl(`/reset-password/${token}`);};
-  Accounts.urls.verifyEmail = (token) => {       return Meteor.absoluteUrl(`/verify-email/${token}`);};
+  process.env.MAIL_URL = "smtps://" + encodeURIComponent("resetsenhatodolist@gmail.com") + ":" + encodeURIComponent("hcsbsohwkwaqpqzg") + "@smtp.gmail.com:465";
+  Accounts.urls.resetPassword = (token) => { return Meteor.absoluteUrl(`/reset-password/${token}`); };
+  Accounts.urls.verifyEmail = (token) => { return Meteor.absoluteUrl(`/verify-email/${token}`); };
+  Accounts.emailTemplates.verifyEmail = {
+    subject() {
+      return ` Confirme seu endereço de e-mail`;
+    },
+    text(user, url) {
+      const nome = user.profile?.firstname || user.username;
+
+      return `Olá, ${nome}!\n\n`
+        + `Para ativar sua conta no ToDoList, por favor clique no link abaixo:\n\n`
+        + `${url}\n\n`
+        + `Obrigado,\n`;
+    }
+  };
+  Accounts.emailTemplates.resetPassword = {
+    subject() {
+      return "Redefinição da sua senha";
+    },
+    text(user, url) {
+      const nome = user.profile?.firstname || user.username;
+
+      return `Olá, ${nome}.\n\n`
+        + `Para criar uma nova senha no ToDoList, clique no link abaixo:\n\n`
+        + `${url}\n\n`
+        + `Se você não solicitou isso, apenas ignore este e-mail.\n\n`
+        + `Obrigado,\n`;
+    }
+  }; 
+
+  const base64Imagem = `data:image/png;base64,${bytesToBase64(await Assets.getBinaryAsync(SEED_IMAGEM_SRC))}`;
+
   // If the Links collection is empty, add some data.
   if (!(await Accounts.findUserByUsername(SEED_USERNAME))) {
     await Accounts.createUser({
@@ -37,9 +76,10 @@ Meteor.startup(async () => {
       profile: {
         firstname: SEED_FIRSTNAME,
         lastname: SEED_LASTNAME,
-        dataNascimento: SEED_DATANASCIMENTO,
+        dataNasc: SEED_DATANASCIMENTO,
         sexo: SEED_SEXO,
         empresa: SEED_EMPRESA,
+        imagem: base64Imagem,
         createdAt: new Date(),
       },
 

@@ -1,7 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import { useTracker, useSubscribe } from 'meteor/react-meteor-data';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
+import Box from '@mui/material/Box';
+import Container from '@mui/material/Container';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
@@ -14,19 +16,16 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
-import { styled } from '@mui/material/styles';
+import PersistentDrawerLeft from './Drawer';
 import Avatar from '@mui/material/Avatar';
 import ButtonBase from '@mui/material/ButtonBase';
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
 
-
-
-
-export default function CreateUserPage() {
+export default function UserInfoPage() {
+    const [carregado, setCarregado] = useState(false);
     const user = useTracker(() => Meteor.user());
     const navigate = useNavigate();
     const [UserName, setUserName] = useState("");
-    const [Password, setPassword] = useState("");
     const [Sexo, setSexo] = useState("Não declarar");
     const [Empresa, setEmpresa] = useState("");
     const [PrimeiroNome, setPrimeiroNome] = useState("");
@@ -34,12 +33,21 @@ export default function CreateUserPage() {
     const [Email, setEmail] = useState("");
     const [DataNasc, setDataNasc] = useState(dayjs());
     const [Imagem, setImagem] = useState();
+    const [Editar, setEditar] = useState(false);
 
     useEffect(() => {
-        if (user) {
-            navigate('/homepage');
+        if (user && carregado === false) {
+            setUserName(user.username);
+            setSexo(user.profile.sexo);
+            setEmpresa(user.profile.empresa);
+            setPrimeiroNome(user.profile.firstname);
+            setSegundoNome(user.profile.lastname);
+            setEmail(user.emails && user.emails[0] ? user.emails[0].address : "");
+            setDataNasc(dayjs(user.profile.dataNasc));
+            setImagem(user.profile.imagem ? user.profile.imagem : "");
+            setCarregado(true);
         }
-    }, [user, navigate]);
+    }, [user]);
     const handleAvatarChange = (event) => {
         const file = event.target.files?.[0];
         if (file) {
@@ -53,52 +61,70 @@ export default function CreateUserPage() {
 
         }
     };
-    const handleCreateUser = async (event) => {
+
+    const handleEditUser = async (event) => {
         event.preventDefault();
-        const resultado = await Meteor.callAsync("CreateUser", {
+
+        const resultado = await Meteor.callAsync("EditUser", {
             username: UserName,
-            password: Password,
             email: Email,
             firstname: PrimeiroNome,
             lastname: SegundoNome,
             empresa: Empresa,
             sexo: Sexo,
-            dataNasc: DataNasc ? DataNasc.toISOString() : null,
             imagem: Imagem,
+            dataNasc: DataNasc ? DataNasc.toISOString() : null,
         })
         console.log(resultado);
-        if (resultado === "Cadastro feito com sucesso") {
-            Meteor.loginWithPassword(UserName, Password);
-            alert("Cadastro realizado, um email de verificação foi enviado.");
+        if (resultado === "Edição feita com sucesso") {
+            if (user.emails[0].address != Email) {
+                alert("Edição realizada, um email de verificação foi enviado.");
+            } else {
+                alert("Edição realizada com sucesso");
+            }
             navigate('/homepage');
         }
         else {
             alert(`Erro: ${resultado.reason}`)
         }
+
     }
 
+    if (!user) { //  espera user = useTracker(() => Meteor.user()); carregar o usuario
+        return (
+            <div className="container">
+                <h1>Carregando usuario... </h1>
+                <Link to="/">Voltar para o login</Link>
+            </div>
+        );
+    }
     return (
         <div className="app">
-            <header>
-                <div className="app-bar">
-                    <div className="app-header">
-                        <h1>PI Synergia Pedro Guilherme
-                        </h1>
+            <PersistentDrawerLeft />
 
-                    </div>
-                </div>
-            </header>
+            <Container sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
 
-            <div className="main">
-                <h2>Cadastro </h2>
-                <form onSubmit={handleCreateUser}>
+            }}>
+                <form onSubmit={handleEditUser}>
+
                     <ListItem className="main">
+                        <Box className="container" >
+                            Perfil
+                        </Box>
 
-
-
+                        {!Editar ?
+                            <Button onClick={() => setEditar(!Editar)} variant="contained" fullWidth label="fullWidth" sx={{ marginBottom: 2 }}>
+                                Ativar edição
+                            </Button> : null}
+                        
+                                
+                            
                         <Stack direction="column" spacing={2}>
-                            <Stack direction="column" spacing={2}>
-                                <ButtonBase
+                            <ButtonBase
+                                    disabled={!Editar}
                                     component="label"
                                     role={undefined}
                                     tabIndex={-1} // prevent label from tab focus
@@ -120,8 +146,8 @@ export default function CreateUserPage() {
                                     </Avatar>
 
                                     <input
+                                        disabled={!Editar}
                                         type="file"
-                                        required
                                         accept="image/*"
                                         style={{
                                             border: 0,
@@ -138,29 +164,19 @@ export default function CreateUserPage() {
 
                                     />
                                 </ButtonBase>
-                            </Stack>
+                            <TextField
+                                disabled={!Editar}
+                                id="Nome de usuario"
+                                label="Nome de usuario"
+                                variant="outlined"
+                                type="text"
+                                required
+                                value={UserName}
+                                onChange={(e) => setUserName(e.target.value)}
+                            />
                             <Stack direction="row" spacing={2}>
                                 <TextField
-                                    id="Nome de usuario"
-                                    label="Nome de usuario"
-                                    variant="outlined"
-                                    type="text"
-                                    required
-                                    value={UserName}
-                                    onChange={(e) => setUserName(e.target.value)}
-                                />
-                                <TextField
-                                    id="Senha"
-                                    label="Senha"
-                                    variant="outlined"
-                                    type="password"
-                                    required
-                                    value={Password}
-                                    onChange={(e) => setPassword(e.target.value)}
-                                />
-                            </Stack>
-                            <Stack direction="row" spacing={2}>
-                                <TextField
+                                    disabled={!Editar}
                                     id="PrimeiroNome"
                                     label="Primeiro Nome"
                                     variant="outlined"
@@ -169,8 +185,8 @@ export default function CreateUserPage() {
                                     value={PrimeiroNome}
                                     onChange={(e) => setPrimeiroNome(e.target.value)}
                                 />
-
                                 <TextField
+                                    disabled={!Editar}
                                     id="Segundo Nome"
                                     label="Segundo Nome"
                                     variant="outlined"
@@ -182,6 +198,7 @@ export default function CreateUserPage() {
                             </Stack>
                             <Stack direction="row" spacing={2}>
                                 <TextField
+                                    disabled={!Editar}
                                     id="Email"
                                     label="Email"
                                     variant="outlined"
@@ -191,6 +208,7 @@ export default function CreateUserPage() {
                                     onChange={(e) => setEmail(e.target.value)}
                                 />
                                 <TextField
+                                    disabled={!Editar}
                                     id="Empresa"
                                     label="Empresa"
                                     variant="outlined"
@@ -200,43 +218,57 @@ export default function CreateUserPage() {
                                     onChange={(e) => setEmpresa(e.target.value)}
                                 />
                             </Stack>
+
                             <RadioGroup
                                 row
+
                                 aria-labelledby="sexo"
                                 name="sexo"
                                 value={Sexo}
                                 onChange={(e) => setSexo(e.target.value)}
                             >
-                                <FormControlLabel value="Masculino" control={<Radio />} label="Masculino" />
-                                <FormControlLabel value="Feminino" control={<Radio />} label="Feminino" />
-                                <FormControlLabel value="Não declarar" control={<Radio />} label="Não declarar" />
+                                <FormControlLabel disabled={!Editar} value="Masculino" control={<Radio />} label="Masculino" />
+                                <FormControlLabel disabled={!Editar} value="Feminino" control={<Radio />} label="Feminino" />
+                                <FormControlLabel disabled={!Editar} value="Não declarar" control={<Radio />} label="Não declarar" />
                             </RadioGroup>
 
-                            <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                <DemoContainer components={['DatePicker']}>
+                            <LocalizationProvider dateAdapter={AdapterDayjs} >
+                                
+                                <DemoContainer components={['DatePicker']} sx={{ maxWidth: '100%' }} >
                                     <DatePicker
+                                        fullWidth
+                                        disabled={!Editar}
                                         label="Data Nascimento"
-                                        
-                                        required
                                         value={DataNasc}
                                         onChange={(newValue) => setDataNasc(newValue)}
+                                        format="DD/MM/YYYY"
+                                        required
                                     />
                                 </DemoContainer>
                             </LocalizationProvider>
 
-                            <Button type="submit" variant="contained">
-                                Cadastrar
-                            </Button>
-                            <div className="container" >
-                                <Link to="/">Já possuo cadastro</Link>
-                                <Link to="/resetPassword">Esqueci minha senha</Link>
-                            </div>
+                            {Editar ?
+                                <Fragment>
+                                    <Button type="submit" variant="contained">
+                                        Confirmar edição
+                                    </Button>
+                                    <Button onClick={() => location.reload()} variant="contained">
+                                        Cancelar edição
+                                    </Button>
+                                </Fragment>
+                                : null}
                         </Stack>
 
+                        <Box className="container" >
+                            <Link to="/reset-password">Alterar senha</Link>
+                        </Box>
+
                     </ListItem>
+
                 </form>
-            </div>
-        </div >
+            </Container>
+        </div>
+
 
     );
 }

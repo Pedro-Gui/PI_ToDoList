@@ -3,21 +3,16 @@ import { useParams } from 'react-router-dom';
 import { useTracker, useSubscribe } from 'meteor/react-meteor-data';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
-import Stack from '@mui/material/Stack';
-import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
 import ListItem from '@mui/material/ListItem';
 import { Accounts } from 'meteor/accounts-base';
+import Box from '@mui/material/Box';
 
 export default function Verifymail() {
     const { token } = useParams();
-    const user = useTracker(() => Meteor.user());
     const navigate = useNavigate();
 
-
-    const handleVerify = async (event) => {
-       event.preventDefault()
-       await Accounts.verifyEmail(token, (error) => {
+    useEffect(async () => {
+            await Accounts.verifyEmail(token, (error) => {
             if (error) {
                 alert(error.reason);
             } else {
@@ -25,7 +20,7 @@ export default function Verifymail() {
                 navigate('/');
             }
         });
-    }
+        }, [token]);
 
     return (
         <div className="app">
@@ -40,19 +35,18 @@ export default function Verifymail() {
             </header>
 
             <div className="main">
-                <form onSubmit={handleVerify}>
-                    <ListItem className="main">
-                        <Stack direction="column" spacing={2}>
-                            <Button type="submit" variant="contained">
-                                Verificar email
-                            </Button>
-                            <div className="container" >
-                                <Link to="/">Fazer login</Link>
-                            </div>
-                        </Stack>
 
-                    </ListItem>
-                </form>
+                <ListItem className="main">
+                    <Box className="container">
+                        Verificando email.
+                    </Box>
+                    <div className="container" >
+                        <Link to="/">Fazer login</Link>
+                    </div>
+
+
+                </ListItem>
+
             </div>
         </div >
 
