@@ -91,8 +91,7 @@ export default function TaskEditPage() {
                 <Box className="container" sx={{ marginTop: 2, marginBottom: 2, color: 'text.primary', fontSize: 20, fontWeight: 'medium', alignSelf: 'stretch', textAlign: 'center' }}>
                     Editar tarefa
                 </Box>
-                <ListItem >
-
+                <ListItem sx={{  width: 'auto' }}>
                     <TasksForm
                         task={task}
                         HandleAdd={HandleAdd}

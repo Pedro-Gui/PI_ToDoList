@@ -28,7 +28,7 @@ import Stack from '@mui/material/Stack';
 import Avatar from '@mui/material/Avatar';
 
 
-const drawerWidth = 240;
+const drawerWidth = 270;
 
 const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(
     ({ theme }) => ({

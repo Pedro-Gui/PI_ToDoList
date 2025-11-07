@@ -70,6 +70,7 @@ export const TasksForm = (
   return (
 
     <form onSubmit={handleSubmit} >
+      <Stack direction="column" spacing={2} sx={{ alignSelf: 'stretch', }}>
       <Stack direction="row" spacing={2} sx={{ alignSelf: 'stretch', }}>
 
         <RadioGroup
@@ -93,18 +94,6 @@ export const TasksForm = (
           value={Nome}
           onChange={(e) => setNome(e.target.value)}
         />
-        <TextField
-          id="Descrição"
-          label="Descrição"
-          variant="outlined"
-          type="text"
-          required
-          value={Desc}
-          onChange={(e) => setDesc(e.target.value)}
-          multiline
-        />
-
-
         <FormControl>
           <InputLabel id="demo-simple-select-label">Situacao</InputLabel>
           <Select
@@ -123,6 +112,17 @@ export const TasksForm = (
         <Button type="submit" variant="contained" sx={{ mr: 'auto' }}>
           {ButtonTxt}
         </Button>
+      </Stack>
+      <TextField
+          id="Descrição"
+          label="Descrição"
+          variant="outlined"
+          type="text"
+          required
+          value={Desc}
+          onChange={(e) => setDesc(e.target.value)}
+          multiline
+        />
       </Stack>
     </form>
 

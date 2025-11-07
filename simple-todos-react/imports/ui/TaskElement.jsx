@@ -70,6 +70,8 @@ export default function TaskElement({ task, userId, HandleApagar, HandleChange, 
   }, [task.userId]);
 
   return (
+    <Fragment>
+      
     <ListItem
       variant="outlined"
       size="small"
@@ -124,7 +126,7 @@ export default function TaskElement({ task, userId, HandleApagar, HandleChange, 
         primary={task.name}
         secondary=
         {<Fragment>
-        Ver descrição:
+        {!expanded? "Ver descrição:":"Ocultar descrição"}
         <ExpandMore
           expand={expanded}
           onClick={handleExpandClick}
@@ -134,22 +136,8 @@ export default function TaskElement({ task, userId, HandleApagar, HandleChange, 
         >
           <ExpandMoreIcon />
         </ExpandMore>
-        <Collapse in={expanded} timeout="auto" unmountOnExit>
-          <Typography sx={{ marginBottom: 2 }}>
-            {task.text}
-          </Typography>
-        </Collapse>
         </Fragment>}
         sx={{ flex: '0 1 auto', minWidth: '300px' }}
-        slotProps={{
-          secondary: {
-            sx: {
-              whiteSpace: 'normal',
-              overflowWrap: 'break-word',
-              maxWidth: "250px"
-            }
-          }
-        }}
       />
 
       <ListItemText
@@ -159,5 +147,11 @@ export default function TaskElement({ task, userId, HandleApagar, HandleChange, 
         sx={{ flex: '1 1 auto' }}
       />
     </ListItem>
+    <Collapse in={expanded} timeout="auto" unmountOnExit>
+          <Typography component="p" sx={{  marginLeft:4, marginRight:4, whiteSpace: 'pre-line', overflowWrap: 'break-word', }}>
+            {task.text}
+          </Typography>
+        </Collapse>
+    </Fragment>
   );
 }

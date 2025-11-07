@@ -66,8 +66,8 @@ export default function TasksPage() {
     const [hideCompleted, setHideCompleted] = useState(false);
     const [search, setSearch] = useState("");
     const [pagina, setPagina] = useState(1);
-    
-    const isLoading = useSubscribe("tasks", hideCompleted, search,pagina);
+
+    const isLoading = useSubscribe("tasks", hideCompleted, search, pagina);
 
     const tasks = useTracker(() => { // se não tiver usuario logado, não carrega os dados
         if (!user) {
@@ -117,7 +117,7 @@ export default function TasksPage() {
             }}>
 
                 <Box className="container" >
-                    Criar tarefa
+                    Adicionar tarefa
                 </Box>
 
                 <TasksForm
@@ -129,7 +129,7 @@ export default function TasksPage() {
                         variant="outlined"
                         sx={{
                             display: 'flex',
-                            justifyContent: 'center', 
+                            justifyContent: 'center',
                             alignItems: 'center',
                         }}
                         secondaryAction={
@@ -174,23 +174,26 @@ export default function TasksPage() {
                         Loading
                     </Button> :
                     <Fragment>
-                    <List sx={{ alignSelf: 'stretch', }}>
-                        {tasks.map((task) => (
-                            <TaskElement
-                                key={task._id}
-                                task={task}
-                                userId={user._id}
-                                HandleApagar={HandleApagar}
-                                HandleChange={HandleChange}
-                                HandleEdit={HandleEdit}
-                                disable={false}
-                            />
-                        ))}
-                    </List>
-                    <Pagination count={10} page={pagina} onChange={(e,value)=>setPagina(value)} color="primary"/>
+                        <List sx={{ alignSelf: 'stretch', }}>
+                            {tasks.map((task) => (
+                                <TaskElement
+                                    key={task._id}
+                                    task={task}
+                                    userId={user._id}
+                                    HandleApagar={HandleApagar}
+                                    HandleChange={HandleChange}
+                                    HandleEdit={HandleEdit}
+                                    disable={false}
+                                />
+                            ))}
+                        </List>
+                        <Pagination count={10} page={pagina} onChange={(e, value) => setPagina(value)} color="primary" />
                     </Fragment>}
 
+                <Box className="container">
+                    <Link to="/homepage">Voltar para Home </Link>
 
+                </Box>
             </Container>
         </div >
     );

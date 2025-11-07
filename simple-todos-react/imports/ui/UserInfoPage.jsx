@@ -261,6 +261,7 @@ export default function UserInfoPage() {
 
                         <Box className="container" >
                             <Link to="/reset-password">Alterar senha</Link>
+                            <Link to="/homepage">Voltar para Home</Link>
                         </Box>
 
                     </ListItem>
