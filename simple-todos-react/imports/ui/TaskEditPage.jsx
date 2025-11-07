@@ -98,6 +98,10 @@ export default function TaskEditPage() {
                         HandleAdd={HandleAdd}
                         ButtonTxt={"Editar Tarefa"} />
                 </ListItem>
+                <Box className="container">
+                    <Link to="/tasks">Voltar para lista de tarefas</Link>
+                    
+                </Box>
             </Container>
         </div>
     );

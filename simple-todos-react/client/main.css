@@ -53,39 +53,6 @@ header {
   gap: 16px;
 }
 
-
-.Meubutton {
-  align-self: center;
-  width: auto;
-  max-width: 20%;
-  font-weight: bold;
-  font-size: 1em;
-  background-color: #ffffff;
-  color: #555;
-  border: 2px solid #ddd;
-  border-radius: 4px;
-  margin-bottom: 1%;
-  margin-left: 1%;
-  box-shadow: 0 3px 3px rgba(34, 25, 25, 0.4);
-  padding: 5px 15px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  white-space: nowrap;
-  min-width: 110px;
-  text-align: center;
-}
-
-.Meubutton:hover {
-  background-color: #f9f9f9;
-  border-color: #bbb;
-  color: #000;
-}
-
-.Meubutton:active {
-  background-color: #eee;
-  transform: scale(0.98);
-}
-
 .login-form {
   display: flex;
   flex-direction: column;
@@ -95,33 +62,6 @@ header {
   align-items: center;
 }
 
-.login-form>div {
-  margin: 8px;
-}
-
-.login-form>div>label {
-  font-weight: bold;
-}
-
-.login-form>div>input {
-  flex-grow: 1;
-  box-sizing: border-box;
-  padding: 10px 6px;
-  background: transparent;
-  border: 1px solid #aaa;
-  width: 100%;
-  font-size: 1em;
-  margin-right: 16px;
-  margin-top: 4px;
-}
-
-.login-form>div>input:focus {
-  outline: 0;
-}
-
-.login-form>div>button {
-  background-color: #62807e;
-}
 
 .container {
   display: flex;

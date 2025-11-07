@@ -52,7 +52,7 @@ export const TasksForm = (
     HandleAdd(Nome, Desc, situacao, privado);
     setNome("");
     setDesc("");
-    setSituacao("");
+    setSituacao("Cadastrada");
     setPrivado(true);
   };
   const HandleSituacao = (event) => {
@@ -76,6 +76,7 @@ export const TasksForm = (
           row
           aria-labelledby="privacidade"
           name="privacidade"
+          required
           value={(privado === true) ? "Privado" : "Publico"}
           onChange={HandlePrivacidade}
         >
@@ -87,6 +88,8 @@ export const TasksForm = (
           id="Nome"
           label="Nome"
           variant="outlined"
+          type="text"
+          required
           value={Nome}
           onChange={(e) => setNome(e.target.value)}
         />
@@ -94,6 +97,8 @@ export const TasksForm = (
           id="Descrição"
           label="Descrição"
           variant="outlined"
+          type="text"
+          required
           value={Desc}
           onChange={(e) => setDesc(e.target.value)}
           multiline
@@ -105,6 +110,7 @@ export const TasksForm = (
           <Select
             labelId="Situacao"
             id="Situacao"
+            required
             value={situacao}
             label={situacao}
             onChange={HandleSituacao}

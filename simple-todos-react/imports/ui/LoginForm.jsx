@@ -1,5 +1,10 @@
 import { Meteor } from "meteor/meteor";
 import React, { useState } from "react";
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+import Stack from '@mui/material/Stack';
+import { Link } from 'react-router-dom';
+import Box from '@mui/material/Box';
 
 export const LoginForm = () => {
   const [username, setUsername] = useState("");
@@ -13,33 +18,36 @@ export const LoginForm = () => {
 
   return (
     <form onSubmit={submit} className="login-form">
-      <div>
-        <label htmlFor="username">Username</label>
-
-        <input
+      <Stack direction="column" spacing={2}>
+        <Box sx={{fontSize:'20px'}}>
+                    Bem vindo ao todo list
+                </Box>
+        <TextField
+          id="Username"
+          label="Username"
+          variant="outlined"
           type="text"
-          placeholder="Username"
-          name="username"
           required
+          value={username}
           onChange={(e) => setUsername(e.target.value)}
         />
-      </div>
-
-      <div>
-        <label htmlFor="password">Password</label>
-
-        <input
+        <TextField
+          id="Password"
+          label="Password"
+          variant="outlined"
           type="password"
-          placeholder="Password"
-          name="password"
           required
+          value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
-      </div>
-
-      <div>
-        <button className="Meubutton" type="submit">Log In</button>
-      </div>
+        <Button type="submit" variant="contained" sx={{ mr: 'auto' }}>
+          Login
+        </Button>
+        <Box className="container">
+                    <Link to="/createUser">Criar Conta</Link>
+                    <Link to="/reset-password">Esqueci minha senha</Link>
+                </Box>
+      </Stack>
     </form>
   );
 };

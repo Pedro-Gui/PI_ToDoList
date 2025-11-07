@@ -11,12 +11,46 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import { styled } from '@mui/material/styles';
+import Collapse from '@mui/material/Collapse';
+import Typography from '@mui/material/Typography';
+
+const ExpandMore = styled((props) => {
+  const { expand, ...other } = props;
+  return <IconButton {...other} />;
+})(({ theme }) => ({
+  marginLeft: 'auto',
+  transition: theme.transitions.create('transform', {
+    duration: theme.transitions.duration.shortest,
+  }),
+  variants: [
+    {
+      props: ({ expand }) => !expand,
+      style: {
+        transform: 'rotate(0deg)',
+      },
+    },
+    {
+      props: ({ expand }) => !!expand,
+      style: {
+        transform: 'rotate(180deg)',
+      },
+    },
+  ],
+}));
 
 export default function TaskElement({ task, userId, HandleApagar, HandleChange, HandleEdit, disable }) {
   const PodeConcluir = (task.situacao !== "Cadastrada") ? false : true;
   const disableEdit = (userId !== task.userId || disable) ? true : false;
   const [imagem, setImagem] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [expanded, setExpanded] = React.useState(false);
+
+  const handleExpandClick = () => {
+    setExpanded(!expanded);
+  };
 
   useEffect(() => {
     async function taskimage() {
@@ -44,8 +78,6 @@ export default function TaskElement({ task, userId, HandleApagar, HandleChange, 
         display: 'flex'
       }}
       secondaryAction={
-
-
         <Fragment>
           <FormControl
             variant="outlined"
@@ -81,7 +113,7 @@ export default function TaskElement({ task, userId, HandleApagar, HandleChange, 
         </Fragment>
       }
     >
-      <ListItemAvatar sx={{maxWidth:'3%'}}>
+      <ListItemAvatar sx={{ maxWidth: '3%' }}>
         {isLoading ?
           <Avatar alt="Upload new avatar" src={imagem} sx={{ width: '80%', aspectRatio: '1 / 1', height: 'auto', }} /> :
           <Avatar> <AccountCircleIcon /> </Avatar>}
@@ -90,8 +122,34 @@ export default function TaskElement({ task, userId, HandleApagar, HandleChange, 
       <ListItemText
 
         primary={task.name}
-        secondary={task.text}
-        sx={{ flex: '0 1 auto', minWidth: '200px' }}
+        secondary=
+        {<Fragment>
+        Ver descrição:
+        <ExpandMore
+          expand={expanded}
+          onClick={handleExpandClick}
+          aria-expanded={expanded}
+          aria-label="Ver descrição"
+          label="Ver descrição"
+        >
+          <ExpandMoreIcon />
+        </ExpandMore>
+        <Collapse in={expanded} timeout="auto" unmountOnExit>
+          <Typography sx={{ marginBottom: 2 }}>
+            {task.text}
+          </Typography>
+        </Collapse>
+        </Fragment>}
+        sx={{ flex: '0 1 auto', minWidth: '300px' }}
+        slotProps={{
+          secondary: {
+            sx: {
+              whiteSpace: 'normal',
+              overflowWrap: 'break-word',
+              maxWidth: "250px"
+            }
+          }
+        }}
       />
 
       <ListItemText
